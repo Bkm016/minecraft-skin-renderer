@@ -2,6 +2,8 @@
 
 这是一个基于 Node.js 的 Minecraft 皮肤渲染服务，可以将 Minecraft 皮肤哈希转换为 3D 渲染的头像图像。
 
+![](pack.png)
+
 ## 功能特点
 
 - 高质量 3D 渲染 Minecraft 皮肤头像
