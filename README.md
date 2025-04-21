@@ -1,6 +1,6 @@
 # Minecraft 皮肤渲染服务
 
-这是一个基于 Node.js 的 Minecraft 皮肤渲染服务，可以将 Minecraft 皮肤哈希转换为 3D 渲染的头像图像。
+这是一个基于 Node.js 的 Minecraft 皮肤渲染服务，可以将 Minecraft 皮肤哈希转换为 3D 渲染的头像图像，同时也支持提取皮肤的面部图像。
 
 ![](pack.png)
 
@@ -10,6 +10,7 @@
 - 支持自定义输出图像尺寸
 - 使用 Three.js 进行 WebGL 渲染
 - 支持皮肤第二层（帽子层）的透明效果
+- 支持提取皮肤面部图像（16x16像素）
 - RESTful API 接口方便集成
 
 ## 安装
@@ -61,6 +62,22 @@ GET /render/:skinHash?width=<宽度>&height=<高度>
 示例:
 ```
 http://localhost:3001/render/ec8a66d70d571b535331e0f064831240932c180e82af2da21e522e15df5e578b?width=512&height=512
+```
+
+#### 获取面部图像
+
+```
+GET /face/:skinHash
+```
+
+参数:
+- `skinHash`: Minecraft皮肤的哈希值（从Mojang API获取）
+
+返回一个16x16像素的PNG图像，包含玩家的面部。如果皮肤有第二层（帽子层），会自动合并显示。
+
+示例:
+```
+http://localhost:3001/face/ec8a66d70d571b535331e0f064831240932c180e82af2da21e522e15df5e578b
 ```
 
 #### 检查服务状态
