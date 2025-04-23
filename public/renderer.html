@@ -40,7 +40,8 @@
     const params = new URLSearchParams(window.location.search);
     let width = parseInt(params.get('width') || '1024');
     let height = parseInt(params.get('height') || '1024');
-    let skinUrl = params.get('skin') || '';
+    let skinHash = params.get('skin') || '';
+    let skinUrl = `https://textures.minecraft.net/texture/${skinHash}`;
     
     // 创建场景
     const scene = new THREE.Scene();

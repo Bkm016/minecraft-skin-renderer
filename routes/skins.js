@@ -1,7 +1,6 @@
-import { join } from 'path';
-import fetch from 'node-fetch';
 import express from 'express';
 import { getBrowser } from '../services/browser.js';
+import { port } from '../server.js';
 
 const router = express.Router();
 
@@ -15,13 +14,13 @@ router.get('/:skinHash', async (req, res) => {
     const parsedWidth = Math.min(Math.max(parseInt(width) || 1024, 64), 1024);
     const parsedHeight = Math.min(Math.max(parseInt(height) || 1024, 64), 1024);
     
-    // 从Mojang API获取皮肤URL
-    const skinUrl = `https://textures.minecraft.net/texture/${skinHash}`;
-    const skinResponse = await fetch(skinUrl);
+    // // 从Mojang API获取皮肤URL
+    // const skinUrl = `https://textures.minecraft.net/texture/${skinHash}`;
+    // const skinResponse = await fetch(skinUrl);
     
-    if (!skinResponse.ok) {
-      return res.status(404).json({ error: '皮肤未找到' });
-    }
+    // if (!skinResponse.ok) {
+    //   return res.status(404).json({ error: '皮肤未找到' });
+    // }
     
     // 获取浏览器实例
     const browser = await getBrowser();
@@ -40,11 +39,8 @@ router.get('/:skinHash', async (req, res) => {
         deviceScaleFactor: 1
       });
       
-      // 获取端口号
-      const port = process.env.PORT || 3001;
-      
-      // 加载renderer.html
-      const rendererUrl = `http://localhost:${port}/renderer.html?width=${parsedWidth}&height=${parsedHeight}&skin=${encodeURIComponent(skinUrl)}`;
+      // 加载 renderer
+      const rendererUrl = `http://localhost:${port}/renderer?width=${parsedWidth}&height=${parsedHeight}&skin=${skinHash}`;
       await page.goto(rendererUrl, { waitUntil: 'networkidle0' });
       
       // 设置页面背景为透明

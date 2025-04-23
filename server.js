@@ -22,21 +22,21 @@ app.use(cors());
 // 初始化必要的目录
 await initDirectories();
 
-// 静态文件服务
-app.use(express.static('public'));
-
 // 注册路由
 app.use('/render', skinRoutes);
+app.get('/renderer', (req, res) => {
+  res.sendFile(join(__dirname, 'public', 'renderer.html'));
+});
 app.use('/face', faceRoutes);
 app.use('/api', systemRoutes);
 
 // 主页
 app.get('/', (req, res) => {
-  res.send('Minecraft皮肤渲染服务已启动');
+  res.send('Minecraft 皮肤渲染服务已启动');
 });
 
 // 启动服务器
 app.listen(port, async () => {
-  console.log(`API服务器运行在 http://localhost:${port}`);
+  console.log(`API 服务器运行在 http://localhost:${port}`);
   await initBrowser();
 }); 
