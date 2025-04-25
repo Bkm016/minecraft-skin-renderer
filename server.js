@@ -14,7 +14,7 @@ import faceRoutes from './routes/face.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
-const port = process.env.PORT || 3001;
+export const port = process.env.PORT || 3001;
 
 // 启用CORS
 app.use(cors());
