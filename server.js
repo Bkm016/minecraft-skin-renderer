@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -15,9 +16,28 @@ import faceRoutes from './routes/face.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 export const port = process.env.PORT || 3001;
+export const host = process.env.HOST || '0.0.0.0';
 
-// 启用CORS
-app.use(cors());
+// CORS 配置（可通过环境变量限制来源）
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || '*',
+  methods: ['GET'],
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+// 速率限制配置
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 分钟
+  max: process.env.RATE_LIMIT || 60, // 每分钟最多 60 次请求
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: '请求过于频繁，请稍后再试' }
+});
+
+// 对渲染 API 应用速率限制
+app.use('/render', limiter);
+app.use('/face', limiter);
 
 // 初始化必要的目录
 await initDirectories();
@@ -36,7 +56,7 @@ app.get('/', (req, res) => {
 });
 
 // 启动服务器
-app.listen(port, async () => {
-  console.log(`API 服务器运行在 http://localhost:${port}`);
+app.listen(port, host, async () => {
+  console.log(`API 服务器运行在 http://${host}:${port}`);
   await initBrowser();
-}); 
+});

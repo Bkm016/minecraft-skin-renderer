@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import express from 'express';
 import sharp from 'sharp';
+import { isValidSkinHash } from '../services/validator.js';
 
 const router = express.Router();
 
@@ -8,6 +9,11 @@ const router = express.Router();
 router.get('/:skinHash', async (req, res) => {
   try {
     const { skinHash } = req.params;
+    
+    // 验证 skinHash 格式
+    if (!isValidSkinHash(skinHash)) {
+      return res.status(400).json({ error: '无效的皮肤哈希格式' });
+    }
     
     // 从Mojang API获取皮肤URL
     const skinUrl = `https://textures.minecraft.net/texture/${skinHash}`;
@@ -56,7 +62,7 @@ router.get('/:skinHash', async (req, res) => {
     
   } catch (error) {
     console.error('处理玩家面部图像出错:', error);
-    res.status(500).json({ error: '处理面部图像失败', details: error.message });
+    res.status(500).json({ error: '处理面部图像失败' });
   }
 });
 

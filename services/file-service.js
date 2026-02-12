@@ -40,20 +40,3 @@ export async function initDirectories() {
   // 创建缓存目录
   await ensureDir('cache');
 }
-
-/**
- * 写入文件
- * @param {string} filePath 文件路径
- * @param {string|Buffer} content 文件内容
- * @returns {Promise<boolean>} 是否成功写入
- */
-export async function writeFile(filePath, content) {
-  try {
-    const fullPath = filePath.startsWith('/') ? filePath : join(rootDir, filePath);
-    await fs.writeFile(fullPath, content);
-    return true;
-  } catch (err) {
-    console.error(`写入文件失败: ${filePath}`, err);
-    return false;
-  }
-} 

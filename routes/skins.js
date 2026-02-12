@@ -1,6 +1,7 @@
 import express from 'express';
 import { getBrowser } from '../services/browser.js';
 import { port } from '../server.js';
+import { isValidSkinHash, parseSize } from '../services/validator.js';
 
 const router = express.Router();
 
@@ -10,9 +11,14 @@ router.get('/:skinHash', async (req, res) => {
     const { skinHash } = req.params;
     const { width = 1024, height = 1024 } = req.query;
     
-    // 验证参数
-    const parsedWidth = Math.min(Math.max(parseInt(width) || 1024, 64), 1024);
-    const parsedHeight = Math.min(Math.max(parseInt(height) || 1024, 64), 1024);
+    // 验证 skinHash 格式
+    if (!isValidSkinHash(skinHash)) {
+      return res.status(400).json({ error: '无效的皮肤哈希格式' });
+    }
+    
+    // 验证尺寸参数
+    const parsedWidth = parseSize(width);
+    const parsedHeight = parseSize(height);
     
     // // 从Mojang API获取皮肤URL
     // const skinUrl = `https://textures.minecraft.net/texture/${skinHash}`;
@@ -114,7 +120,7 @@ router.get('/:skinHash', async (req, res) => {
     }
   } catch (error) {
     console.error('渲染错误:', error);
-    res.status(500).json({ error: '渲染失败', details: error.message });
+    res.status(500).json({ error: '渲染失败' });
   }
 });
 
